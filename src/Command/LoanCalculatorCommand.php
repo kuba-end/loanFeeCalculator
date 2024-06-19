@@ -64,8 +64,7 @@ class LoanCalculatorCommand extends Command
     private function prepareAmountQuestion(HelperInterface $helper, InputInterface $input, OutputInterface $output): Question
     {
         $amountQuestion = new Question('Please provide the amount of the loan (minimum loan is 1000 and maximum is 20000): ', 5000);
-        $amountQuestion->setValidator(function ($answer) use ($helper, $input, $output) {
-
+        $amountQuestion->setValidator(function ($answer) {
             $amount = (float) $this->calculator->truncateToDecimal($answer);
             if ($amount < 1000 || $amount > 20000) {
                 throw new RuntimeException('The amount must be between 1000 and 20000.');
