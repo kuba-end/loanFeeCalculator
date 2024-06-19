@@ -34,18 +34,11 @@ A database or any other external dependency is not required for this test.
 composer install
 ```
 
-# Example
+# How to use
+Use command and follow instructions 
 
-```php
-<?php
-
-use PragmaGoTech\Interview\Model\LoanProposal;
-
-$calculator = new FeeCalculator();
-
-$application = new LoanProposal(24, 2750);
-$fee = $calculator->calculate($application);
-// $fee = (float) 115.0
+```bash
+bin/console app:loan-fee-calculator
 ```
 
 # Fee Structure
