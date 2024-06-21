@@ -7,11 +7,14 @@ namespace PragmaGoTech\Interview\Command;
 use PragmaGoTech\Interview\Enum\FeeEnum;
 use PragmaGoTech\Interview\Factory\LoanProposalFactory;
 use PragmaGoTech\Interview\Factory\LoanStrategyFactoryInterface;
-use PragmaGoTech\Interview\Service\CalculatorInterface;
+use PragmaGoTech\Interview\Service\FeeCalculatorInterface;
+use PragmaGoTech\Interview\Service\InputTransformerInterface;
+use PragmaGoTech\Interview\Strategy\LoanStrategy;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\HelperInterface;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -25,8 +28,9 @@ use Symfony\Component\Console\Question\Question;
 class LoanCalculatorCommand extends Command
 {
     public function __construct(
-        private readonly CalculatorInterface $calculator,
-        private readonly LoanStrategyFactoryInterface $loanStrategyFactory
+        private readonly InputTransformerInterface $transformer,
+        private readonly FeeCalculatorInterface $feeHelper,
+        private readonly LoanStrategy $loanStrategy
     ) {
         parent::__construct();
     }
@@ -39,6 +43,7 @@ class LoanCalculatorCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         $amountQuestion = $this->prepareAmountQuestion($helper, $input, $output);
         $termQuestion = new ChoiceQuestion(
@@ -49,13 +54,10 @@ class LoanCalculatorCommand extends Command
 
         $amount = (float) $helper->ask($input, $output, $amountQuestion);
         $termMonths = $helper->ask($input, $output, $termQuestion);
-
-        $term = FeeEnum::from($termMonths);
-        $loanStrategy = $this->loanStrategyFactory->create($term);
         $loanProposal = LoanProposalFactory::create($termMonths, $amount);
+        $fee = $this->loanStrategy->calculate($loanProposal);
 
-        $fee = $loanStrategy->calculate($loanProposal);
-        $roundedUpFee = $this->calculator->roundUpLoanAndFeeSum($fee,$amount);
+        $roundedUpFee = $this->feeHelper->roundUpLoanAndFeeSum($fee,$amount);
         $output->writeln("Your fee is " . $roundedUpFee);
 
         return self::SUCCESS;
@@ -65,7 +67,7 @@ class LoanCalculatorCommand extends Command
     {
         $amountQuestion = new Question('Please provide the amount of the loan (minimum loan is 1000 and maximum is 20000): ', 5000);
         $amountQuestion->setValidator(function ($answer) {
-            $amount = (float) $this->calculator->truncateToDecimal($answer);
+            $amount = (float) $this->transformer->truncateToDecimal($answer);
             if ($amount < 1000 || $amount > 20000) {
                 throw new RuntimeException('The amount must be between 1000 and 20000.');
             }
