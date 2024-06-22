@@ -6,9 +6,6 @@ namespace spec\PragmaGoTech\Interview\Service;
 
 use PhpSpec\ObjectBehavior;
 use PragmaGoTech\Interview\Model\LoanProposal;
-use PragmaGoTech\Interview\Service\Calculator;
-use PragmaGoTech\Interview\Service\FeeCalculatorInterface;
-use PragmaGoTech\Interview\Service\calculateProvider;
 use PragmaGoTech\Interview\Service\InterpolateFeeProvider;
 
 class InterpolateFeeProviderSpec extends ObjectBehavior
@@ -81,14 +78,14 @@ class InterpolateFeeProviderSpec extends ObjectBehavior
     public function it_should_returns_linear_interpolation_for_long_term_loan(): void
     {
 
-        $this->calculate(1001, self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(70.03, 0.001);
-        $this->calculate(2750, self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(115, 0.01);
-        $this->calculate(3892.98, self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(155.7192, 0.00001);
-        $this->calculate(19999.99, self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(799.9996, 0.00001);
-        $this->calculate(11111.11, self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(444.4444, 0.00001);
-        $this->calculate(9000.00, self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(360, 0.01);
-        $this->calculate(9000.01, self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(360.0004, 0.00001);
-        $this->calculate(4827.63, self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(193.1052, 0.000001);
+        $this->calculate(new LoanProposal(12, 1001), self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(70.03, 0.001);
+        $this->calculate(new LoanProposal(12, 2750), self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(115, 0.01);
+        $this->calculate(new LoanProposal(12, 3892.98), self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(155.7192, 0.00001);
+        $this->calculate(new LoanProposal(12, 19999.99), self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(799.9996, 0.00001);
+        $this->calculate(new LoanProposal(12, 11111.11), self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(444.4444, 0.00001);
+        $this->calculate(new LoanProposal(12, 9000.00), self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(360, 0.01);
+        $this->calculate(new LoanProposal(12, 9000.01), self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(360.0004, 0.00001);
+        $this->calculate(new LoanProposal(12, 4827.63), self::LONG_LOAN_FEE_TABLE)->shouldBeApproximately(193.1052, 0.000001);
     }
 
 

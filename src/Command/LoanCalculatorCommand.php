@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace PragmaGoTech\Interview\Command;
 
-use PragmaGoTech\Interview\Enum\FeeEnum;
 use PragmaGoTech\Interview\Factory\LoanProposalFactory;
-use PragmaGoTech\Interview\Factory\LoanStrategyFactoryInterface;
-use PragmaGoTech\Interview\Service\FeeCalculatorInterface;
+use PragmaGoTech\Interview\Service\FeeCalculatorHelperInterface;
 use PragmaGoTech\Interview\Service\InputTransformerInterface;
 use PragmaGoTech\Interview\Strategy\LoanStrategy;
 use RuntimeException;
@@ -29,7 +27,7 @@ class LoanCalculatorCommand extends Command
 {
     public function __construct(
         private readonly InputTransformerInterface $transformer,
-        private readonly FeeCalculatorInterface $feeHelper,
+        private readonly FeeCalculatorHelperInterface $feeHelper,
         private readonly LoanStrategy $loanStrategy
     ) {
         parent::__construct();
