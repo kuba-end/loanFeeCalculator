@@ -20,7 +20,15 @@ Use command and follow instructions
 ```bash
 bin/console app:loan-fee-calculator
 ```
+# How to tests
 
+```bash
+vendor/bin/phpspec run
+```
+# How to run static analyse
+```bash
+vendor/bin/phpstan analyse
+```
 ### Term 12
 ```
 1000 PLN: 50 PLN
