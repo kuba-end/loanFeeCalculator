@@ -11,7 +11,6 @@ use PragmaGoTech\Interview\Strategy\LoanStrategy;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\HelperInterface;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,7 +42,7 @@ class LoanCalculatorCommand extends Command
     {
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
-        $amountQuestion = $this->prepareAmountQuestion($helper, $input, $output);
+        $amountQuestion = $this->prepareAmountQuestion();
         $termQuestion = new ChoiceQuestion(
             'Please select term of loan (in months)',
                      [12,24],
@@ -61,7 +60,7 @@ class LoanCalculatorCommand extends Command
         return self::SUCCESS;
     }
 
-    private function prepareAmountQuestion(HelperInterface $helper, InputInterface $input, OutputInterface $output): Question
+    private function prepareAmountQuestion(): Question
     {
         $amountQuestion = new Question('Please provide the amount of the loan (minimum loan is 1000 and maximum is 20000): ', 5000);
         $amountQuestion->setValidator(function ($answer) {

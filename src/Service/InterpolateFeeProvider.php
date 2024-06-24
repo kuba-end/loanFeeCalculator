@@ -6,14 +6,9 @@ namespace PragmaGoTech\Interview\Service;
 
 use PragmaGoTech\Interview\FeeCalculatorInterface;
 use PragmaGoTech\Interview\Model\LoanProposal;
-use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 class InterpolateFeeProvider implements FeeCalculatorInterface
 {
-    public function __construct()
-    {
-
-    }
     public function supports(LoanProposal $application, array $feeTable): bool
     {
         return !isset($feeTable[$application->amount()]);
