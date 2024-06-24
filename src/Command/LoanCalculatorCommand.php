@@ -62,7 +62,9 @@ class LoanCalculatorCommand extends Command
 
     private function prepareAmountQuestion(): Question
     {
-        $amountQuestion = new Question('Please provide the amount of the loan (minimum loan is 1000 and maximum is 20000): ', 5000);
+        $amountQuestion = new Question(
+            "Please provide the amount of the loan. Loan need to be\n- in range 1000 to 20000\n- contains up to 2 decimal places(anything above will be cut (not rounded))\n:",
+            5000);
         $amountQuestion->setValidator(function ($answer) {
             $amount = (float) $this->transformer->truncateToDecimal($answer);
             if ($amount < 1000 || $amount > 20000) {
